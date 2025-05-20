@@ -79,21 +79,6 @@ const App = () => {
         </Box>
       ) : (
         <>
-          {view === 'list' && data.length > PER_PAGE && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
-              <Pagination
-                count={pageCount}
-                page={currentPage}
-                onChange={handlePageChange}
-                color="primary"
-                siblingCount={1}
-                boundaryCount={1}
-                showFirstButton
-                showLastButton
-              />
-            </Box>
-          )}
-
           <ResultView data={getPagedData()} view={view} type={type} loadType={loadType} stat={stat} />
 
           {view === 'list' && data.length > PER_PAGE && (
