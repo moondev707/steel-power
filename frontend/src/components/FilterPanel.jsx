@@ -1,51 +1,15 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const Form = styled.form`
-  display: grid;
-  gap: 10px;
-  margin-bottom: 20px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-`;
-
-const Label = styled.label`
-  margin-right: 10px;
-`;
-
-const CheckboxLabel = styled.label`
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-`;
-
-const Select = styled.select`
-  padding: 5px;
-`;
-
-const Input = styled.input`
-  padding: 5px;
-`;
-
-const SubmitButton = styled.button`
-  padding: 0.5rem 1rem;
-  font-weight: bold;
-  background-color: #1976d2;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #1565c0;
-  }
-`;
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 const FilterPanel = ({
   from, to, days, type, view, stat, loadType,
@@ -59,8 +23,8 @@ const FilterPanel = ({
   const loadTypeOptions = ['Maximum_Load', 'Light_Load'];
   const statOptions = ['sum', 'mean', 'min', 'max', 'median'];
 
-  const handleDaysChange = (e) => {
-    const { value, checked } = e.target;
+  const handleDaysChange = (event) => {
+    const { value, checked } = event.target;
     if (checked) {
       onDaysChange([...days, value]);
     } else {
@@ -74,69 +38,119 @@ const FilterPanel = ({
   };
 
   return (
-    <Form className="filter-panel" onSubmit={handleSubmit}>
-      <Row>
-        <Label>From:</Label>
-        <Input type="date" value={from} onChange={e => onFromChange(e.target.value)} />
-        <Label>To:</Label>
-        <Input type="date" value={to} onChange={e => onToChange(e.target.value)} />
-      </Row>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: 'grid',
+        gap: 2,
+        mb: 3,
+      }}
+    >
+      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+        <TextField
+          label="From"
+          type="date"
+          value={from}
+          onChange={e => onFromChange(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+          sx={{ minWidth: 150 }}
+        />
+        <TextField
+          label="To"
+          type="date"
+          value={to}
+          onChange={e => onToChange(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+          sx={{ minWidth: 150 }}
+        />
+      </Box>
 
-      <Row>
-        <Label>Day(s) of Week:</Label>
-        {dayOptions.map(day => (
-          <CheckboxLabel key={day}>
-            <input
-              type="checkbox"
-              value={day}
-              checked={days.includes(day)}
-              onChange={handleDaysChange}
+      <Box>
+        <Typography variant="subtitle1" gutterBottom>
+          Day(s) of Week:
+        </Typography>
+        <FormGroup row>
+          {dayOptions.map(day => (
+            <FormControlLabel
+              key={day}
+              control={
+                <Checkbox
+                  value={day}
+                  checked={days.includes(day)}
+                  onChange={handleDaysChange}
+                />
+              }
+              label={day}
             />
-            {day}
-          </CheckboxLabel>
-        ))}
-      </Row>
-
-      <Row>
-        <Label>Consumption Type:</Label>
-        <Select value={type} onChange={e => onTypeChange(e.target.value)}>
-          {typeOptions.map(opt => (
-            <option key={opt} value={opt}>{opt}</option>
           ))}
-        </Select>
-      </Row>
+        </FormGroup>
+      </Box>
 
-      <Row>
-        <Label>Load Type:</Label>
-        <Select value={loadType} onChange={e => onLoadTypeChange(e.target.value)}>
-          <option value="">All</option>
-          {loadTypeOptions.map(opt => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </Select>
-      </Row>
-
-      <Row>
-        <Label>View:</Label>
-        <Select value={view} onChange={e => onViewChange(e.target.value)}>
-          <option value="list">List</option>
-          <option value="summary">Summary</option>
-        </Select>
-      </Row>
-
-      {view === 'summary' && (
-        <Row>
-          <Label>Stat:</Label>
-          <Select value={stat} onChange={e => onStatChange(e.target.value)}>
-            {statOptions.map(opt => (
-              <option key={opt} value={opt}>{opt}</option>
+      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel id="type-label">Consumption Type</InputLabel>
+          <Select
+            labelId="type-label"
+            value={type}
+            label="Consumption Type"
+            onChange={e => onTypeChange(e.target.value)}
+          >
+            {typeOptions.map(opt => (
+              <MenuItem key={opt} value={opt}>{opt}</MenuItem>
             ))}
           </Select>
-        </Row>
-      )}
+        </FormControl>
 
-      <SubmitButton type="submit">Search</SubmitButton>
-    </Form>
+        <FormControl sx={{ minWidth: 150 }}>
+          <InputLabel id="load-type-label">Load Type</InputLabel>
+          <Select
+            labelId="load-type-label"
+            value={loadType}
+            label="Load Type"
+            onChange={e => onLoadTypeChange(e.target.value)}
+          >
+            <MenuItem value="">All</MenuItem>
+            {loadTypeOptions.map(opt => (
+              <MenuItem key={opt} value={opt}>{opt}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ minWidth: 120 }}>
+          <InputLabel id="view-label">View</InputLabel>
+          <Select
+            labelId="view-label"
+            value={view}
+            label="View"
+            onChange={e => onViewChange(e.target.value)}
+          >
+            <MenuItem value="list">List</MenuItem>
+            <MenuItem value="summary">Summary</MenuItem>
+          </Select>
+        </FormControl>
+
+        {view === 'summary' && (
+          <FormControl sx={{ minWidth: 120 }}>
+            <InputLabel id="stat-label">Stat</InputLabel>
+            <Select
+              labelId="stat-label"
+              value={stat}
+              label="Stat"
+              onChange={e => onStatChange(e.target.value)}
+            >
+              {statOptions.map(opt => (
+                <MenuItem key={opt} value={opt}>{opt}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+      </Box>
+
+      <Button variant="contained" type="submit" sx={{ alignSelf: 'start', mt: 1 }}>
+        Search
+      </Button>
+    </Box>
   );
 };
 

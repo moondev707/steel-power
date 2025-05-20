@@ -1,83 +1,124 @@
 import React from 'react';
-import styled from 'styled-components';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
-const SummaryBox = styled.div`
-  padding: 1rem;
-  background-color: #f3f3f3;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-`;
-
-const Heading = styled.h3`
-  margin-bottom: 0.5rem;
-`;
-
-const TableContainer = styled.div`
-  overflow-x: auto;
-`;
-
-const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
-
-const Th = styled.th`
-  background-color: #e0e0e0;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  text-align: left;
-`;
-
-const Td = styled.td`
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-`;
+import EventIcon from '@mui/icons-material/Event';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import BoltIcon from '@mui/icons-material/Bolt';
+import PowerIcon from '@mui/icons-material/Power';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const ResultView = ({ data, view, type, loadType, stat }) => {
   if (!data) return null;
 
   if (view === 'summary') {
     return (
-      <SummaryBox>
-        <Heading>Summary</Heading>
-        <p><strong>Type:</strong> {type}</p>
-        <p><strong>Stat:</strong> {stat}</p>
-        <p><strong>Result:</strong> {data.result}</p>
-      </SummaryBox>
+      <Box
+        sx={{
+          p: 2,
+          bgcolor: '#f3f3f3',
+          borderRadius: 2,
+          mb: 3,
+          maxWidth: 600,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <AssessmentIcon color="primary" />
+          <Typography variant="h5">Summary</Typography>
+        </Box>
+        <Typography><strong>Type:</strong> {type}</Typography>
+        <Typography><strong>Stat:</strong> {stat}</Typography>
+        <Typography><strong>Result:</strong> {data.result}</Typography>
+      </Box>
     );
   }
 
-  // Defensive check
   if (!Array.isArray(data)) {
-    return <p>No data available to display as a list.</p>;
+    return (
+      <Typography color="text.secondary" sx={{ mt: 2 }}>
+        No data available to display as a list.
+      </Typography>
+    );
   }
 
   return (
-    <div>
-      <Heading>Data List</Heading>
-      <TableContainer>
-        <StyledTable>
-          <thead>
-            <tr>
-              <Th>Date</Th>
-              <Th>Day</Th>
-              <Th>{type}</Th>
-              <Th>Load Type</Th>
-            </tr>
-          </thead>
-          <tbody>
+    <Box sx={{ maxWidth: '100%', overflowX: 'auto' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}>
+        <AssessmentIcon color="primary" />
+        <Typography variant="h5">Data List</Typography>
+      </Box>
+
+      {/* Container with fixed height & vertical scrolling */}
+      <TableContainer
+        component={Paper}
+        sx={{
+          maxWidth: 900,
+          maxHeight: 400,       // Fixed height (adjust as needed)
+          overflowY: 'auto',    // Vertical scroll when content overflows vertically
+          overflowX: 'auto',    // Horizontal scroll if table is wider than container
+        }}
+      >
+        <Table stickyHeader aria-label="data table" sx={{ minWidth: 700 }}>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <EventIcon fontSize="small" color="action" />
+                  Date
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <CalendarTodayIcon fontSize="small" color="action" />
+                  Day
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <BoltIcon fontSize="small" color="action" />
+                  {type}
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <PowerIcon fontSize="small" color="action" />
+                  Load Type
+                </Box>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {data.map((row, idx) => (
-              <tr key={idx}>
-                <Td>{row.date}</Td>
-                <Td>{row.day}</Td>
-                <Td>{row[type]}</Td>
-                <Td>{row.loadType}</Td>
-              </tr>
+              <TableRow
+                key={idx}
+                hover
+                sx={{
+                  cursor: 'pointer',
+                  '&:hover': {
+                    bgcolor: 'rgba(25, 118, 210, 0.1)',
+                  },
+                }}
+              >
+                <TableCell>{row.date}</TableCell>
+                <TableCell>{row.day}</TableCell>
+                <TableCell>{row[type]}</TableCell>
+                <TableCell>{row.loadType}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </StyledTable>
+          </TableBody>
+        </Table>
       </TableContainer>
-    </div>
+    </Box>
   );
 };
 

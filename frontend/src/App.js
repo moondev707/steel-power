@@ -1,26 +1,13 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import ReactPaginate from 'react-paginate';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Pagination from '@mui/material/Pagination';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import FilterPanel from './components/FilterPanel';
 import ResultView from './components/ResultView';
 import { fetchPowerData } from './api/powerAPI';
-import './pagination.css'; // Keep your pagination CSS or migrate to styled-components if desired
-
-const AppContainer = styled.div`
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-  font-family: sans-serif;
-`;
-
-const Title = styled.h1`
-  text-align: center;
-  margin-bottom: 2rem;
-`;
-
-const LoadingText = styled.p`
-  text-align: center;
-`;
 
 const PER_PAGE = 30;
 
@@ -34,14 +21,14 @@ const App = () => {
   const [stat, setStat] = useState('sum');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleFetch = async (filters) => {
     setLoading(true);
     try {
       const result = await fetchPowerData(filters);
       setData(result);
-      setCurrentPage(0); // Reset page to first on new search
+      setCurrentPage(1); // reset page
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -53,18 +40,20 @@ const App = () => {
 
   const getPagedData = () => {
     if (view !== 'list') return data;
-    if (!Array.isArray(data)) return []; // Return empty array if data is not an array
-    const offset = currentPage * PER_PAGE;
+    if (!Array.isArray(data)) return [];
+    const offset = (currentPage - 1) * PER_PAGE;
     return data.slice(offset, offset + PER_PAGE);
   };
 
-  const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
   };
 
   return (
-    <AppContainer>
-      <Title>Steel Industry Power Analysis</Title>
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <Typography variant="h4" component="h1" align="center" gutterBottom>
+        Steel Industry Power Analysis
+      </Typography>
 
       <FilterPanel
         from={from}
@@ -85,39 +74,45 @@ const App = () => {
       />
 
       {loading ? (
-        <LoadingText>Loading...</LoadingText>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+          <CircularProgress />
+        </Box>
       ) : (
         <>
           {view === 'list' && data.length > PER_PAGE && (
-            <ReactPaginate
-              previousLabel={'← Previous'}
-              nextLabel={'Next →'}
-              pageCount={pageCount}
-              onPageChange={handlePageClick}
-              containerClassName={'pagination'}
-              activeClassName={'active'}
-              pageRangeDisplayed={3}
-              marginPagesDisplayed={1}
-            />
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+              <Pagination
+                count={pageCount}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                siblingCount={1}
+                boundaryCount={1}
+                showFirstButton
+                showLastButton
+              />
+            </Box>
           )}
 
           <ResultView data={getPagedData()} view={view} type={type} loadType={loadType} stat={stat} />
 
           {view === 'list' && data.length > PER_PAGE && (
-            <ReactPaginate
-              previousLabel={'← Previous'}
-              nextLabel={'Next →'}
-              pageCount={pageCount}
-              onPageChange={handlePageClick}
-              containerClassName={'pagination'}
-              activeClassName={'active'}
-              pageRangeDisplayed={3}
-              marginPagesDisplayed={1}
-            />
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+              <Pagination
+                count={pageCount}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                siblingCount={1}
+                boundaryCount={1}
+                showFirstButton
+                showLastButton
+              />
+            </Box>
           )}
         </>
       )}
-    </AppContainer>
+    </Container>
   );
 };
 
