@@ -1,4 +1,51 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const Form = styled.form`
+  display: grid;
+  gap: 10px;
+  margin-bottom: 20px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+`;
+
+const Label = styled.label`
+  margin-right: 10px;
+`;
+
+const CheckboxLabel = styled.label`
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+const Select = styled.select`
+  padding: 5px;
+`;
+
+const Input = styled.input`
+  padding: 5px;
+`;
+
+const SubmitButton = styled.button`
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #1565c0;
+  }
+`;
 
 const FilterPanel = ({
   from, to, days, type, view, stat, loadType,
@@ -27,18 +74,18 @@ const FilterPanel = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '10px', marginBottom: '20px' }}>
-      <div>
-        <label>From: </label>
-        <input type="date" value={from} onChange={e => onFromChange(e.target.value)} />
-        <label style={{ marginLeft: '10px' }}>To: </label>
-        <input type="date" value={to} onChange={e => onToChange(e.target.value)} />
-      </div>
+    <Form className="filter-panel" onSubmit={handleSubmit}>
+      <Row>
+        <Label>From:</Label>
+        <Input type="date" value={from} onChange={e => onFromChange(e.target.value)} />
+        <Label>To:</Label>
+        <Input type="date" value={to} onChange={e => onToChange(e.target.value)} />
+      </Row>
 
-      <div>
-        <label>Day(s) of Week: </label>
+      <Row>
+        <Label>Day(s) of Week:</Label>
         {dayOptions.map(day => (
-          <label key={day} style={{ marginRight: '10px' }}>
+          <CheckboxLabel key={day}>
             <input
               type="checkbox"
               value={day}
@@ -46,50 +93,50 @@ const FilterPanel = ({
               onChange={handleDaysChange}
             />
             {day}
-          </label>
+          </CheckboxLabel>
         ))}
-      </div>
+      </Row>
 
-      <div>
-        <label>Consumption Type: </label>
-        <select value={type} onChange={e => onTypeChange(e.target.value)}>
+      <Row>
+        <Label>Consumption Type:</Label>
+        <Select value={type} onChange={e => onTypeChange(e.target.value)}>
           {typeOptions.map(opt => (
             <option key={opt} value={opt}>{opt}</option>
           ))}
-        </select>
-      </div>
+        </Select>
+      </Row>
 
-      <div>
-        <label>Load Type: </label>
-        <select value={loadType} onChange={e => onLoadTypeChange(e.target.value)}>
+      <Row>
+        <Label>Load Type:</Label>
+        <Select value={loadType} onChange={e => onLoadTypeChange(e.target.value)}>
           <option value="">All</option>
           {loadTypeOptions.map(opt => (
             <option key={opt} value={opt}>{opt}</option>
           ))}
-        </select>
-      </div>
+        </Select>
+      </Row>
 
-      <div>
-        <label>View: </label>
-        <select value={view} onChange={e => onViewChange(e.target.value)}>
+      <Row>
+        <Label>View:</Label>
+        <Select value={view} onChange={e => onViewChange(e.target.value)}>
           <option value="list">List</option>
           <option value="summary">Summary</option>
-        </select>
-      </div>
+        </Select>
+      </Row>
 
       {view === 'summary' && (
-        <div>
-          <label>Stat: </label>
-          <select value={stat} onChange={e => onStatChange(e.target.value)}>
+        <Row>
+          <Label>Stat:</Label>
+          <Select value={stat} onChange={e => onStatChange(e.target.value)}>
             {statOptions.map(opt => (
               <option key={opt} value={opt}>{opt}</option>
             ))}
-          </select>
-        </div>
+          </Select>
+        </Row>
       )}
 
-      <button type="submit">Search</button>
-    </form>
+      <SubmitButton type="submit">Search</SubmitButton>
+    </Form>
   );
 };
 

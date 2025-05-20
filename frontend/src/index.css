@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.filter-panel {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  display: grid;
+  gap: 10px;
+  margin-bottom: 20px;
+}

@@ -16,3 +16,5 @@ export const fetchPowerData = async ({ from, to, days, type, loadType, view, sta
   const response = await axios.get(`${BASE_URL}/power`, { params });
   return response.data;
 };
+
+export default fetchPowerData;
