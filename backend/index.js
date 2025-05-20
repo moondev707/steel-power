@@ -57,8 +57,6 @@ return data.filter((row) => {
 
     // Apply loadType filter — skip if loadType is "All"
     if (loadType && (loadType !== row.Load_Type)) return false;
-    //     console.log("loadType=========", loadType)
-    //    if (!loadType || loadType == row.Load_Type) return true;
 
     return true;
 });
@@ -81,8 +79,7 @@ app.get('/power', (req, res) => {
   } = req.query;
 
   if (!type) return res.status(400).json({ error: 'Missing type parameter' });
-  //if (!loadType) return res.status(400).json({ error: 'Missing loadType parameter' });
-  console.log('req.query', req.query, loadType);
+
   const dayList = days ? days.split(',') : [];
 
   const filtered = filterData({ from, to, days: dayList, type, loadType: req.query.loadType || '' });

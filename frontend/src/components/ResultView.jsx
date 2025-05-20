@@ -1,5 +1,4 @@
 const ResultView = ({ data, view, type, loadType, stat }) => {
-  console.log('ResultView data:', data);
   if (!data) return null;
 
   if (view === 'summary') {

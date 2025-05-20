@@ -33,9 +33,16 @@ const App = () => {
     }
   };
 
-  const offset = currentPage * PER_PAGE;
-  const currentPageData = data.slice(offset, offset + PER_PAGE);
   const pageCount = Math.ceil(data.length / PER_PAGE);
+
+  const mappedData = (view)=>{
+
+    if(view === 'list'){
+      const offset = currentPage * PER_PAGE;
+      return data && data.slice(offset, offset + PER_PAGE);
+    }
+    return data;
+  }
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
@@ -78,9 +85,9 @@ const App = () => {
             />
           )}
 
-          <ResultView data={currentPageData} view={view} type={type} loadType={loadType} stat={stat} />
+          <ResultView data={mappedData(view)} view={view} type={type} loadType={loadType} stat={stat} prePage={PER_PAGE} />
 
-          {data.length > PER_PAGE && (
+          {view === 'list' && data.length > PER_PAGE && (
             <ReactPaginate
               previousLabel={'← Previous'}
               nextLabel={'Next →'}
